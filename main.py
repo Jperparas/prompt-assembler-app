@@ -1,5 +1,8 @@
 import streamlit as st
+from services.groq_service import GroqService 
+from services.prompt_builder import generate_meta_prompt
 
+groq = GroqService(api_key=st.secrets["GROQ_API_KEY"])
 st.set_page_config(page_title="Text Assembler", layout="centered")
 
 st.title("Prompt Designer")
@@ -22,10 +25,9 @@ with st.form("input_form"):
 
 if submit:
     # Filter out empty strings and join with double newlines
-    st.session_state.final_text = "\n".join([i for i in inputs if i.strip()])
+    st.session_state.final_text = groq.generate(generate_meta_prompt(inputs))
 
 if st.session_state.final_text:
     st.subheader("Result")
-    # st.code is the best 'copy-paste' shortcut in Streamlit
     st.code(st.session_state.final_text, language=None)
 

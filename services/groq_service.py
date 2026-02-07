@@ -1,15 +1,15 @@
 from groq import Groq
+class GroqService:
 
-client = Groq(api_key=st.secrets["GROQ_API_KEY"])
+    def __init__(self, api_key):
+        self.client = Groq(api_key=api_key)
+    
+    def generate(self, prompt):
+        response = self.client.chat.completions.create(
+            model="llama-3.3-70b-versatile",
+            messages=[{"role": "user", "content": prompt}]
+        )
+        return response.choices[0].message.content
 
-chat_completion = client.chat.completions.create(
-    messages=[
-        {
-            "role": "user",
-            "content": "Explain the importance of fast language models",
-        }
-    ],
-    model="llama-3.3-70b-versatile",
-)
 
-print(chat_completion.choices[0].message.content)
+
